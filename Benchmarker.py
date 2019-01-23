@@ -118,7 +118,7 @@ class Benchmarker:
             per_loop_time = '%.20f' % per_loop_time
             print("\tResult (seconds): ", per_loop_time)
             results.append(per_loop_time)
-
+        print('pandas_dataframe_avg_time  = ', results)
         return
 
     def benchmark_all(self):
@@ -173,5 +173,17 @@ class Benchmarker:
         plt.show()
 
     def print_results(self):
-        for x in self.benchmark_results:
-            print(x)
+        # Old method
+        for i, x in enumerate(self.benchmark_results):
+            print(" {} = {} ".format(self.functions_to_evaluate[i].__name__, x))
+        self.print_results_markdown()        
+
+    def print_results_markdown(self):
+        print()
+        print(" | Number of rows ", end=" ")
+        for func in self.functions_to_evaluate:
+            print(" | {} avg time ".format(func.__name__), end =" ")
+        print(" | ")
+        print(" |------------|------------|------------| ")
+        for result_index in range(len(self.df_size_powers)):
+            print(" | 10 ** {} | {} | {} | ".format(self.df_size_powers[result_index], self.benchmark_results[0][result_index], self.benchmark_results[1][result_index]))

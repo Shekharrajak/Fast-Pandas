@@ -22,4 +22,4 @@ params = {
 benchmark = Benchmarker(**params)
 benchmark.benchmark_all()
 benchmark.print_results()
-benchmark.plot_results()
+# benchmark.plot_results()
