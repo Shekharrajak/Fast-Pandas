@@ -4,7 +4,6 @@ from time import monotonic
 import pandas as pd
 import numpy as np
 
-
 class Benchmarker:
     def __init__(self, df_generator, functions_to_evaluate, title, user_df_size_powers=None,
                  user_loop_size_powers=None, largest_df_single_test=True):
@@ -26,9 +25,9 @@ class Benchmarker:
 
         self.benchmark_results = []
         self.title = title
-        self.valid = self.validate_functions()
-        if not self.valid:
-            print("WARNING: evaluated functions return different results.")
+        # self.valid = self.validate_functions()
+        # if not self.valid:
+        #     print("WARNING: evaluated functions return different results.")
 
     def validate_functions(self):
         functions_results = []
@@ -86,6 +85,41 @@ class Benchmarker:
             results.append(per_loop_time)
 
         return results
+
+    def benchmark_time_create_df(self, df_function_to_evaluate, np_array_func):
+        """
+        Creates a test_df with 'df_generator', and runs 'function_to_evaluate' N times, where N = len(df_size_powers)
+        For each run i, a test_df of size 10 ** self.df_size_power[i] is created, and the function_to_evaluate is run
+        for 10 ** loop_size_power[i] times.
+
+        Returns
+        -------
+        A list of size N containing the average
+
+        """
+        results = []
+
+        for df_size_power, loop_size_power in zip(self.df_size_powers, self.loop_size_powers):
+            df_size = 10 ** df_size_power
+            print("\tCreating dataframe of size: ", df_size)
+            np_array = eval(np_array_func)
+            # print("DataFrame => " , df)
+            # print('loop_size_power', loop_size_power)
+            loop_size = 10 ** loop_size_power
+
+            start_time = monotonic()
+
+            for loop_counter in range(loop_size):
+                eval(df_function_to_evaluate)
+
+            end_time = monotonic()
+            per_loop_time = (end_time - start_time) / loop_size
+            # print("per_loop_time : ", per_loop_time)
+            per_loop_time = '%.20f' % per_loop_time
+            print("\tResult (seconds): ", per_loop_time)
+            results.append(per_loop_time)
+
+        return
 
     def benchmark_all(self):
         """
