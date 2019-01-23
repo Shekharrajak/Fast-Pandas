@@ -20,7 +20,7 @@ def numpy_values_nanprod(df):
 
 params = {
     "df_generator": 'pd.DataFrame(np.random.randint(1, df_size, (df_size, 2)), columns=list("AB"))',
-    "functions_to_evaluate": [numpy_values_prod, numpy_values_nanprod, pandas_prod, numpy_prod],
+    "functions_to_evaluate": [ pandas_prod, numpy_prod],
     "title": "Pandas Prod vs Numpy Prod",
 }
 

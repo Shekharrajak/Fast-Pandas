@@ -69,7 +69,8 @@ class Benchmarker:
             df_size = 10 ** df_size_power
             print("\tTesting with a dataframe of size: ", df_size)
             df = eval(self.df_generator)
-
+            # print("DataFrame => " , df)
+            # print('loop_size_power', loop_size_power)
             loop_size = 10 ** loop_size_power
 
             start_time = monotonic()
@@ -79,6 +80,8 @@ class Benchmarker:
 
             end_time = monotonic()
             per_loop_time = (end_time - start_time) / loop_size
+            # print("per_loop_time : ", per_loop_time)
+            per_loop_time = '%.20f' % per_loop_time
             print("\tResult (seconds): ", per_loop_time)
             results.append(per_loop_time)
 
@@ -109,8 +112,16 @@ class Benchmarker:
 
         plt.sca(ax[1])
         scaled_results = []
-        for result in self.benchmark_results:
-            scaled_results.append(np.divide(np.array(result), np.array(self.benchmark_results[0])))
+        # When result is already in float
+        # for result in self.benchmark_results:
+        #     scaled_results.append(np.divide(np.array(result), np.array(self.benchmark_results[0])))
+
+        benchmark_results_float = []
+        for func_result in self.benchmark_results:
+            benchmark_results_float.append([float(x) for x in func_result])
+
+        for result in benchmark_results_float:
+            scaled_results.append(np.divide(np.array(result), np.array(benchmark_results_float[0])))
 
         max_diff = np.max(scaled_results)
         if max_diff < 3:
